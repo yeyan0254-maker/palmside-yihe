@@ -1,1 +1,50 @@
+name: CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Build static web bundle
+        run: npm run build
+
+      - name: Build single-file offline bundle
+        run: npm run build:single
+
+      - name: Static zero-external-asset redline audit
+        run: |
+          if grep -rnE "fetch\(|GLTFExporter|DRACOLoader|\.wasm|\.glb|\.mp3|cdn\.|https?://" src index.html | grep -v "http://www.w3.org/2000/svg"; then
+            echo "Found forbidden external asset or fetch reference"
+            exit 1
+          fi
+          echo "COMPLIANCE_AUDIT_CLEAN"
+
+      - name: Upload offline single-file HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: palmside-yihe-offline-singlefile
+          path: dist-single/index.html
+          retention-days: 30

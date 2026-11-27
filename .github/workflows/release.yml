@@ -1,0 +1,45 @@
+name: Release Offline Single-File
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck and build single-file bundle
+        run: |
+          npm run typecheck
+          npm run build:single
+          cp dist-single/index.html palmside-yihe-offline.html
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" palmside-yihe-offline.html --clobber
+          else
+            gh release create "$TAG_NAME" palmside-yihe-offline.html \
+              --title "掌上颐和 $TAG_NAME" \
+              --generate-notes \
+              --notes "附带 \`palmside-yihe-offline.html\` 单文件离线版本，下载后可直接用现代浏览器离线打开。"
+          fi
