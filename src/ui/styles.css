@@ -1,1 +1,1528 @@
+:root,
+html[data-theme='xuan-light'] {
+  --bg-top: #f2f1e9;
+  --bg-bottom: #e2e5dd;
+  --bg-glow: rgba(255, 253, 246, 0.72);
+  --surface-panel: rgba(252, 251, 247, 0.84);
+  --surface-elevated: rgba(255, 254, 250, 0.94);
+  --surface-subtle: rgba(31, 36, 33, 0.045);
+  --surface-border: rgba(45, 52, 48, 0.13);
+  --text-primary: #1f2421;
+  --text-secondary: #5a635c;
+  --text-muted: rgba(31, 36, 33, 0.45);
+  --accent-seal: #2b4f43;
+  --accent-seal-text: #faf9f4;
+  --accent-cinnabar: #9e2e24;
+  --accent-gold: #9a742c;
+  --toast-bg: rgba(31, 36, 33, 0.86);
+  --toast-text: #f7f5ee;
+  --shadow-soft: 0 10px 30px rgba(24, 30, 26, 0.08);
+  --shadow-panel: 0 18px 46px rgba(20, 26, 22, 0.13);
+  --scrollbar-track: rgba(31, 36, 33, 0.07);
+  --scrollbar-thumb: linear-gradient(180deg, #b5aa94, #8c826d);
+  --scrollbar-thumb-hover: linear-gradient(180deg, #9a742c, #6e511b);
+  --scrollbar-shadow: none;
+  color-scheme: light;
+}
 
+html[data-theme='ink-gold'] {
+  --bg-top: #10141a;
+  --bg-bottom: #07090c;
+  --bg-glow: rgba(214, 174, 96, 0.09);
+  --surface-panel: rgba(15, 19, 25, 0.82);
+  --surface-elevated: rgba(19, 24, 32, 0.93);
+  --surface-subtle: rgba(230, 195, 116, 0.08);
+  --surface-border: rgba(214, 174, 96, 0.25);
+  --text-primary: #ebe4d4;
+  --text-secondary: #aba28f;
+  --text-muted: rgba(235, 228, 212, 0.45);
+  --accent-seal: #d7b15e;
+  --accent-seal-text: #13161b;
+  --accent-cinnabar: #c44033;
+  --accent-gold: #e6c374;
+  --toast-bg: rgba(21, 25, 34, 0.92);
+  --toast-text: #f3ead6;
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.36);
+  --shadow-panel: 0 20px 50px rgba(0, 0, 0, 0.52);
+  --scrollbar-track: rgba(10, 12, 16, 0.5);
+  --scrollbar-thumb: linear-gradient(180deg, #b38838, #e6c374, #966f29);
+  --scrollbar-thumb-hover: linear-gradient(180deg, #c99d47, #f2d58e, #b38838);
+  --scrollbar-shadow: 0 0 6px rgba(230, 195, 116, 0.45);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+  color: var(--text-primary);
+  background: radial-gradient(circle at 50% 42%, var(--bg-glow) 0%, transparent 56%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#app canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.webgl-fallback {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-top);
+  z-index: 999;
+}
+
+.webgl-fallback[hidden] {
+  display: none;
+}
+
+.webgl-fallback-card {
+  max-width: 440px;
+  padding: 24px 28px;
+  border-radius: 14px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-panel);
+}
+
+.webgl-fallback-card h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.webgl-fallback-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* 双主题定制纤细滚动条（WebKit + Firefox 双兼容，PRD 5.1） */
+.yihe-scroll,
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold) var(--scrollbar-track);
+}
+
+.yihe-scroll::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.yihe-scroll::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 999px;
+}
+
+.yihe-scroll::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  box-shadow: var(--scrollbar-shadow);
+}
+
+.yihe-scroll::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  box-shadow: 0 0 8px rgba(230, 195, 116, 0.65);
+}
+
+/* 画卷浮层根容器 */
+.hud-root {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.hud-interactive {
+  pointer-events: auto;
+}
+
+/* 3D-to-2D 景点悬浮 POI 标注层 */
+.poi-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  transition: opacity 0.2s ease;
+}
+
+.poi-layer.is-muted {
+  opacity: 0;
+}
+
+.poi-pin {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+  will-change: transform, opacity;
+  transition: opacity 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.poi-pin::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--accent-seal);
+  box-shadow: 0 0 0 2px var(--surface-elevated);
+}
+
+.poi-pin:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.poi-pin.is-active {
+  background: var(--accent-seal);
+  color: var(--accent-seal-text);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.poi-pin.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.poi-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cinnabar);
+  flex-shrink: 0;
+}
+
+.poi-pin.is-active .poi-dot {
+  background: var(--accent-seal-text);
+}
+
+/* 左上角极简无框品牌头 */
+.hud-brand {
+  position: fixed;
+  top: 18px;
+  left: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  pointer-events: auto;
+}
+
+.hud-seal-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent-seal);
+  color: var(--accent-seal-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  flex-shrink: 0;
+}
+
+.hud-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-brand-title {
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.hud-brand-sub {
+  font-size: 9.5px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.1;
+}
+
+/* 左上留白裸字英雄文案 / 入景导览卡 */
+.hud-hero {
+  position: fixed;
+  top: 15.5%;
+  left: 26px;
+  width: 282px;
+  pointer-events: none;
+}
+
+.hud-hero-bare {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hud-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hud-eyebrow::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+}
+
+.hud-hero-poem {
+  margin: 0;
+  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
+
+.hud-hero-en {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.hud-hero-verse {
+  margin: 8px 0 2px;
+  font-size: 12px;
+  line-height: 1.85;
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+.hud-hero-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 9.5px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hud-hero-credit::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--surface-border);
+}
+
+/* 入景导览卡 */
+.hud-spot-card {
+  width: 274px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+}
+
+.hud-spot-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.8px;
+  color: var(--accent-gold);
+}
+
+.hud-spot-card-title {
+  margin: 0 0 6px;
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-primary);
+}
+
+.hud-spot-card-desc {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.hud-spot-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-mini-btn {
+  appearance: none;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-subtle);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.hud-mini-btn:hover {
+  border-color: var(--accent-gold);
+  background: rgba(154, 116, 44, 0.12);
+}
+
+.hud-mini-btn.is-primary {
+  margin-left: auto;
+  background: var(--accent-seal);
+  color: var(--accent-seal-text);
+  border-color: transparent;
+}
+
+/* 左下诗意题记与操作微提示（轻薄柔光托底保证越过深色木盘或雪面依然清晰可读） */
+.hud-story {
+  position: fixed;
+  bottom: 50px;
+  left: 24px;
+  max-width: 248px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: none;
+}
+
+.hud-story-rule {
+  width: 14px;
+  height: 1px;
+  background: var(--accent-gold);
+  opacity: 0.7;
+  margin-bottom: 7px;
+}
+
+.hud-story-title {
+  margin: 0 0 4px;
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hud-story-body {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+.hud-gesture-hint {
+  position: fixed;
+  bottom: 18px;
+  left: 24px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 10.5px;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* 右上三层控制区 */
+.hud-top-right {
+  position: fixed;
+  top: 18px;
+  right: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.hud-top-row1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.hud-tagline {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.hud-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+}
+
+.hud-capsule-compact {
+  padding: 3px;
+}
+
+.hud-seg-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.hud-seg-btn-sm {
+  font-size: 11.5px;
+  padding: 4px 11px;
+}
+
+.hud-seg-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.hud-seg-btn.is-active {
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  border-color: var(--surface-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.hud-seg-btn.is-solid-active {
+  color: var(--accent-seal-text);
+  background: var(--accent-seal);
+  border-color: transparent;
+}
+
+.hud-circle-btn {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-panel);
+  backdrop-filter: blur(12px);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: color 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.hud-circle-btn:hover,
+.hud-circle-btn.is-active {
+  color: var(--text-primary);
+  border-color: var(--accent-gold);
+}
+
+.hud-weather-trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.hud-weather-trigger:hover,
+.hud-weather-trigger.is-open {
+  border-color: var(--accent-gold);
+}
+
+/* 右侧折叠展开面板（湖山天气 / 雅乐声景） */
+.hud-right-popover {
+  position: fixed;
+  top: 140px;
+  right: 26px;
+  width: 282px;
+  max-height: calc(100vh - 246px);
+  overflow-y: auto;
+  padding: 12px 14px 11px;
+  border-radius: 16px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+  pointer-events: auto;
+  z-index: 30;
+}
+
+.hud-right-popover[hidden] {
+  display: none;
+}
+
+.hud-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.hud-popover-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: var(--text-primary);
+}
+
+.hud-popover-code {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hud-weather-grid5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  margin-bottom: 9px;
+}
+
+.hud-wmode-btn {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 5px 2px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.hud-wmode-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--surface-border);
+}
+
+.hud-wmode-btn.is-active {
+  background: rgba(43, 79, 67, 0.13);
+  border-color: var(--accent-seal);
+  color: var(--accent-seal);
+  font-weight: 600;
+}
+
+html[data-theme='ink-gold'] .hud-wmode-btn.is-active {
+  background: rgba(215, 177, 94, 0.16);
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+.hud-slider-block {
+  margin-bottom: 8px;
+}
+
+.hud-slider-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.hud-slider-val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hud-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--scrollbar-track);
+  outline: none;
+  cursor: pointer;
+}
+
+.hud-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent-seal);
+  border: 2px solid var(--surface-elevated);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.hud-range::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent-seal);
+  border: 2px solid var(--surface-elevated);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.hud-sub-note {
+  margin-top: 4px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.hud-telemetry-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 10px;
+  padding: 7px 9px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--surface-border);
+}
+
+.hud-tele-cell {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.hud-tele-cell strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.hud-select-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.hud-select {
+  flex: 1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  outline: none;
+}
+
+.hud-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 7px;
+}
+
+.hud-chip-btn {
+  appearance: none;
+  padding: 4px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.hud-chip-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.hud-chip-btn.is-active {
+  background: var(--accent-seal);
+  color: var(--accent-seal-text);
+  border-color: transparent;
+}
+
+.hud-action-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.hud-cycle-box {
+  padding: 7px 9px;
+  margin-bottom: 7px;
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--surface-border);
+}
+
+.hud-cycle-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.hud-cycle-grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.hud-cycle-speed-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.hud-cycle-speed-btns {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.hud-cycle-speed-btns .hud-chip-btn {
+  padding: 3px 8px;
+}
+
+.hud-footnote {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* 雅乐声景面板专有样式 */
+.hud-track-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.hud-track-btn {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hud-track-btn strong {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hud-track-btn span {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.hud-track-btn.is-active {
+  border-color: var(--accent-seal);
+  background: rgba(43, 79, 67, 0.12);
+}
+
+html[data-theme='ink-gold'] .hud-track-btn.is-active {
+  border-color: var(--accent-gold);
+  background: rgba(215, 177, 94, 0.14);
+}
+
+.hud-custom-music-box {
+  padding: 9px 10px;
+  margin-bottom: 11px;
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--surface-border);
+}
+
+.hud-custom-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.hud-url-row {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.hud-url-row[hidden] {
+  display: none;
+}
+
+.hud-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+}
+
+.hud-playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.hud-playlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  font-size: 11px;
+}
+
+.hud-playlist-item.is-active {
+  border-color: var(--accent-gold);
+}
+
+.hud-playlist-play {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.hud-playlist-del {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 2px 4px;
+}
+
+.hud-playlist-del:hover {
+  color: var(--accent-cinnabar);
+}
+
+.hud-progress-wrap {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* 右侧 8 图标竖排工具条 */
+.hud-rail {
+  position: fixed;
+  right: 26px;
+  top: 52%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 5px;
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 25;
+}
+
+.hud-rail.is-suppressed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(10px);
+}
+
+.hud-rail-btn {
+  appearance: none;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.hud-rail-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.hud-rail-btn.is-active {
+  color: var(--accent-seal-text);
+  background: var(--accent-seal);
+}
+
+.hud-rail-btn .hud-live-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+}
+
+.hud-rail-btn[data-tip]:hover::before {
+  content: attr(data-tip);
+  position: absolute;
+  right: 38px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 底部微提示 / 状态 Toast */
+.hud-toast {
+  position: fixed;
+  bottom: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.hud-toast::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+}
+
+.hud-toast.is-loud {
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* 底部居中悬浮景点主胶囊 */
+.hud-bottom-dock {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 8px;
+  max-width: calc(100vw - 440px);
+  border-radius: 999px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-panel);
+  pointer-events: auto;
+  z-index: 25;
+}
+
+.hud-dock-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.hud-spot-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.hud-spot-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.hud-spot-btn.is-active {
+  color: var(--accent-seal-text);
+  background: var(--accent-seal);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+}
+
+.hud-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
+  background: var(--surface-border);
+  flex-shrink: 0;
+}
+
+.hud-icon-btn {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.hud-icon-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.hud-icon-btn.is-active {
+  color: var(--accent-seal-text);
+  background: var(--accent-seal);
+}
+
+/* 底部向上弹层（更多景点 / 画质 / 关于） */
+.hud-up-menu {
+  position: fixed;
+  padding: 8px;
+  border-radius: 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+  pointer-events: auto;
+  z-index: 35;
+}
+
+.hud-up-menu[hidden] {
+  display: none;
+}
+
+.hud-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 176px;
+}
+
+.hud-menu-item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hud-menu-item:hover {
+  background: var(--surface-subtle);
+}
+
+.hud-menu-item.is-active {
+  color: var(--accent-seal);
+  font-weight: 600;
+  background: rgba(154, 116, 44, 0.1);
+}
+
+html[data-theme='ink-gold'] .hud-menu-item.is-active {
+  color: var(--accent-gold);
+}
+
+.hud-menu-tag {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.hud-info-popover {
+  position: fixed;
+  top: 56px;
+  right: 26px;
+  width: 274px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+  pointer-events: auto;
+  z-index: 35;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.hud-info-popover[hidden] {
+  display: none;
+}
+
+.hud-info-popover h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* 右下角景点序号与时辰滑块 */
+.hud-bottom-right {
+  position: fixed;
+  bottom: 18px;
+  right: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 13px;
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+}
+
+.hud-spot-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.hud-counter-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--accent-gold);
+}
+
+.hud-counter-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.hud-time-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.hud-time-val {
+  min-width: 34px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hud-time-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 82px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--surface-border);
+  outline: none;
+  cursor: pointer;
+}
+
+.hud-time-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 2px solid var(--surface-elevated);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.hud-time-range::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 2px solid var(--surface-elevated);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.hud-cycle-btn {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.hud-cycle-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-gold);
+}
+
+.hud-cycle-btn.is-active {
+  background: var(--accent-seal);
+  color: var(--accent-seal-text);
+  border-color: transparent;
+}
+
+@media (max-width: 1180px) {
+  .hud-tagline,
+  .hud-story,
+  .hud-gesture-hint {
+    display: none;
+  }
+
+  .hud-bottom-dock {
+    max-width: calc(100vw - 230px);
+  }
+}
+
+@media (max-height: 680px) {
+  .hud-story {
+    display: none;
+  }
+}
+
+/* P13：截屏冻结态禁用一切动画与暂态 Toast，避免截屏模糊与重影 */
+html[data-frozen='true'] *,
+html[data-frozen='true'] *::before,
+html[data-frozen='true'] *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+html[data-frozen='true'] .hud-toast.is-loud {
+  background: var(--surface-panel);
+  color: var(--text-secondary);
+}
