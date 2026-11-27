@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="xuan-light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>掌上颐和 · 高精度 3D 新中式微缩沙盘</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%239E2E24'/><text x='16' y='22' text-anchor='middle' font-size='18' fill='%23FAF9F4'>颐</text></svg>"
+    />
+    <link rel="stylesheet" href="/src/ui/styles.css" />
+  </head>
+  <body>
+    <div id="app" aria-label="掌上颐和三维微缩沙盘画布"></div>
+    <div id="hud-root" class="hud-root" aria-label="掌上颐和画卷控制界面"></div>
+    <div id="webgl-fallback" class="webgl-fallback" hidden>
+      <div class="webgl-fallback-card">
+        <h2>无法初始化 WebGL2 渲染环境</h2>
+        <p>《掌上颐和》需要支持 WebGL2 与硬件/软件着色的现代浏览器。请确认已启用 WebGL2 或更新显卡驱动后刷新重试。</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
